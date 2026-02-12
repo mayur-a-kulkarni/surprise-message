@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Be My Valentine ❤️</title>
+<style>
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    font-family: 'Poppins', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: linear-gradient(135deg, #ffe6f0, #ffc1d4, #ff9ebe);
+    color: #821131;
+    text-align: center;
+    overflow: hidden;
+  }
+
+  .wrapper {
+    position: relative;
+    z-index: 2;
+    padding: 20px;
+  }
+
+  .subtitle {
+    font-size: 0.95rem;
+    opacity: 0.85;
+    margin-bottom: 8px;
+    min-height: 1.2em;
+  }
+
+  .subtitle span {
+    display: inline-block;
+    border-right: 2px solid rgba(130, 17, 49, 0.6);
+    padding-right: 3px;
+    animation: blinkCursor 0.7s steps(1) infinite;
+  }
+
+  @keyframes blinkCursor {
+    0%, 50% { border-color: rgba(130, 17, 49, 0.6); }
+    50.01%, 100% { border-color: transparent; }
+  }
+
+  h1 {
+    font-size: 1.9rem;
+    margin: 10px 10px 18px;
+    animation: breathe 3s ease-in-out infinite;
+  }
+
+  @keyframes breathe {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.03); }
+  }
+
+  .hint {
+    font-size: 0.9rem;
+    margin-top: 6px;
+    opacity: 0.9;
+  }
+
+  .hint span {
+    font-size: 1.1rem;
+  }
+
+  .buttons {
+    display: flex;
+    gap: 18px;
+    margin-top: 20px;
+    justify-content: center;
+  }
+
+  button {
+    border: none;
+    padding: 12px 26px;
+    font-size: 1.05rem;
+    border-radius: 999px;
+    color: #fff;
+    cursor: pointer;
+    background: #ff7b9c;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+    box-shadow: 0 10px 24px rgba(255, 105, 180, 0.4);
+    position: relative;
+    overflow: hidden;
+  }
+
+  #yes {
+    background: radial-gradient(circle at 30% 30%, #ffe4f3, #ff3366);
+    box-shadow: 0 12px 28px rgba(255, 51, 102, 0.55);
+    animation: pulse 1.4s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { transform: translateY(0) scale(1); box-shadow: 0 12px 28px rgba(255, 51, 102, 0.55); }
+    50% { transform: translateY(-2px) scale(1.05); box-shadow: 0 16px 34px rgba(255, 51, 102, 0.7); }
+  }
+
+  #yes::before {
+    content: "";
+    position: absolute;
+    top: -120%;
+    left: -30%;
+    width: 60%;
+    height: 300%;
+    background: linear-gradient(120deg, rgba(255,255,255,0.2), rgba(255,255,255,0));
+    transform: translateX(-100%);
+    pointer-events: none;
+  }
+
+  #yes:hover::before {
+    animation: shine 0.7s ease-out;
+  }
+
+  @keyframes shine {
+    from { transform: translateX(-120%); }
+    to { transform: translateX(180%); }
+  }
+
+  #yes:hover {
+    background: radial-gradient(circle at 30% 30%, #ffe9f5, #e62e5c);
+  }
+
+  #no {
+    background: #ff7b9c;
+  }
+
+  #no:hover {
+    transform: translateY(-1px) scale(1.03);
+    background: #ff5f88;
+  }
+
+  #no:hover::after {
+    content: "Are you ok?";
+    position: absolute;
+    top: -40px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #fff;
+    color: #ff3366;
+    padding: 5px 10px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    white-space: nowrap;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+  }
+
+  .disappear {
+    animation: fadeOutUp 0.9s forwards;
+  }
+
+  @keyframes fadeOutUp {
+    to {
+      opacity: 0;
+      transform: translateY(-100px) scale(0);
+    }
+  }
+
+  #message {
+    margin-top: 26px;
+    font-size: 1.25rem;
+    display: none;
+    color: #b3124b;
+    font-weight: 700;
+  }
+
+  #message span {
+    display: inline-block;
+    animation: popIn 0.5s ease-out;
+  }
+
+  @keyframes popIn {
+    from { transform: scale(0.8) translateY(10px); opacity: 0; }
+    to { transform: scale(1) translateY(0); opacity: 1; }
+  }
+
+  canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* Floating hearts background */
+  .hearts {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .heart {
+    position: absolute;
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 18px;
+    animation: floatUp 10s linear infinite;
+  }
+
+  .heart:nth-child(2) {
+    font-size: 22px;
+    animation-duration: 12s;
+    animation-delay: 2s;
+  }
+
+  .heart:nth-child(3) {
+    font-size: 16px;
+    animation-duration: 9s;
+    animation-delay: 4s;
+  }
+
+  .heart:nth-child(4) {
+    font-size: 20px;
+    animation-duration: 13s;
+    animation-delay: 1.5s;
+  }
+
+  .heart:nth-child(5) {
+    font-size: 24px;
+    animation-duration: 11s;
+    animation-delay: 3s;
+  }
+
+  .heart:nth-child(6) {
+    font-size: 18px;
+    animation-duration: 15s;
+    animation-delay: 5s;
+  }
+
+  .heart:nth-child(7) {
+    font-size: 14px;
+    animation-duration: 9s;
+    animation-delay: 6s;
+  }
+
+  @keyframes floatUp {
+    0% {
+      transform: translateY(100vh) translateX(0);
+      opacity: 0;
+    }
+    10% {
+      opacity: 1;
+    }
+    50% {
+      transform: translateY(40vh) translateX(20px);
+    }
+    100% {
+      transform: translateY(-10vh) translateX(-20px);
+      opacity: 0;
+    }
+  }
+
+  @media (max-width: 600px) {
+    h1 {
+      font-size: 1.5rem;
+      padding: 0 16px;
+    }
+    .subtitle {
+      font-size: 0.9rem;
+      padding: 0 18px;
+    }
+    button {
+      font-size: 1rem;
+      padding: 10px 20px;
+    }
+    .buttons {
+      gap: 14px;
+    }
+    #message {
+      font-size: 1.1rem;
+      padding: 0 18px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="hearts">
+  <div class="heart" style="left: 5%;">❤️</div>
+  <div class="heart" style="left: 20%;">💖</div>
+  <div class="heart" style="left: 35%;">💕</div>
+  <div class="heart" style="left: 55%;">💗</div>
+  <div class="heart" style="left: 70%;">💘</div>
+  <div class="heart" style="left: 85%;">💝</div>
+  <div class="heart" style="left: 45%;">💞</div>
+</div>
+
+<div class="wrapper">
+  <div class="subtitle">
+    <span id="typing"></span>
+  </div>
+
+  <h1>Mayura! 💖 Will you be my Valentine?</h1>
+
+  <div class="buttons">
+    <button id="yes">Yes, of course! 💕</button>
+    <button id="no">No</button>
+  </div>
+
+  <div class="hint">
+    There is only one <span>right</span> answer here… 😉
+  </div>
+
+  <div id="message">
+    <span>🎉 Congratulations! You have made the best decision of your life!!! ❤️</span>
+  </div>
+</div>
+
+<canvas id="confetti"></canvas>
+
+<script>
+  const typingEl = document.getElementById('typing');
+  const typingText = "Thinking about asking you something important...";
+  let typingIndex = 0;
+
+  function typeSubtitle() {
+    if (typingIndex <= typingText.length) {
+      typingEl.textContent = typingText.slice(0, typingIndex);
+      typingIndex++;
+      setTimeout(typeSubtitle, 60);
+    }
+  }
+  setTimeout(typeSubtitle, 800);
+
+  const noBtn = document.getElementById('no');
+  const yesBtn = document.getElementById('yes');
+  const msg = document.getElementById('message');
+  const canvas = document.getElementById('confetti');
+  const ctx = canvas.getContext('2d');
+
+  function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  window.addEventListener('resize', resizeCanvas);
+  resizeCanvas();
+
+  noBtn.addEventListener('click', () => {
+    noBtn.classList.add('disappear');
+    setTimeout(() => noBtn.style.display = 'none', 900);
+  });
+
+  yesBtn.addEventListener('click', () => {
+    msg.style.display = 'block';
+
+    noBtn.classList.add('disappear');
+    setTimeout(() => noBtn.style.display = 'none', 500);
+
+    yesBtn.disabled = true;
+    yesBtn.style.cursor = 'default';
+
+    startConfetti();
+    setTimeout(stopConfetti, 5000);
+  });
+
+  const confettiParticles = [];
+  let confettiAnimationId;
+
+  function startConfetti() {
+    confettiParticles.length = 0;
+    for (let i = 0; i < 140; i++) {
+      confettiParticles.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height - canvas.height,
+        r: Math.random() * 6 + 2,
+        d: Math.random() * 50,
+        color: `hsl(${Math.random() * 360}, 100%, 70%)`
+      });
+    }
+    animateConfetti();
+  }
+
+  function animateConfetti() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    confettiParticles.forEach(p => {
+      ctx.beginPath();
+      ctx.fillStyle = p.color;
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fill();
+      p.y += 2;
+      if (p.y > canvas.height) p.y = -10;
+    });
+    confettiAnimationId = requestAnimationFrame(animateConfetti);
+  }
+
+  function stopConfetti() {
+    cancelAnimationFrame(confettiAnimationId);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    confettiParticles.length = 0;
+  }
+</script>
+
+</body>
+</html>
